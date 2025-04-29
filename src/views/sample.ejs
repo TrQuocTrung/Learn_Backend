@@ -64,7 +64,9 @@
                     </td>
                     <td>
                         <a type="button" class="btn btn-primary" href="/edit/<%=dataUser[i].id%>">Edit</a>
-                        <button type="button" class="btn btn-warning">Delete</button>
+                        <form method="POST" action="/users/:id/<%=dataUser[i].id%>" style="display:inline;">
+                            <button type="submit" class="btn btn-warning">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 <%} %>

@@ -1,17 +1,18 @@
 const connection = require('../config/connectDB');
-const { getAllUsers, getUserById, updateUserbyId } = require('../services/CRUDservice');
+const { getAllUsers, getUserById, updateUserbyId, deleteUserbyId } = require('../services/CRUDservice');
+const User = require('../models/user');
 const getHomepage = async (req, res) => {
-    let result = await getAllUsers();
+    let result = await User.find();
     res.render('sample.ejs', { dataUser: result });
 }
 const postAddUser = async (req, res) => {
     let email = req.body.email;
     let name = req.body.name;
     let city = req.body.city;
-    let sqlInsert = `INSERT INTO Users (email, name, city) VALUES(?,?,?)`;
-    if (!email || !name || !city) {
-        return res.status(400).send("Missing required fields");
-    }
+    // let sqlInsert = `INSERT INTO Users (email, name, city) VALUES(?,?,?)`;
+    // if (!email || !name || !city) {
+    //     return res.status(400).send("Missing required fields");
+    // }
     // connection.query(sqlInsert, (err, result) => {
     //     if (err) {
     //         console.log(err);
@@ -19,10 +20,16 @@ const postAddUser = async (req, res) => {
     //     }
     //     return res.status(200).send("User added successfully");
     // });
-    let [result, fields] = await connection.query(sqlInsert, [email, name, city]);
-    console.log("checkresult", result);
-    console.log("CheckBody", req.body);
-    res.send("User added successfully");
+    // let [result, fields] = await connection.query(sqlInsert, [email, name, city]);
+    // console.log("checkresult", result);
+    // console.log("CheckBody", req.body);
+    // res.send("User added successfully");
+    await User.create({
+        email: email,
+        name: name,
+        city: city
+    });
+    return res.send("User added successfully");
 }
 const getCreatePage = (req, res) => {
     return res.render('createUser.ejs');
@@ -36,4 +43,8 @@ const postUpdateUser = async (req, res) => {
     await updateUserbyId(req.body.email, req.body.name, req.body.city, req.body.id);
     res.send("User updated successfully");
 }
-module.exports = { getHomepage, postAddUser, getCreatePage, getPageUpdate, postUpdateUser };
+const deleteOne = async (req, res) => {
+    await deleteUserbyId(req.params.id)
+    res.send("Delete success")
+}
+module.exports = { getHomepage, postAddUser, getCreatePage, getPageUpdate, postUpdateUser, deleteOne };
