@@ -1,4 +1,3 @@
-const { error } = require('console');
 const path = require('path');
 
 const uploadSingleFile = async (fileObject) => {
